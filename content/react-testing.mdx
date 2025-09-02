@@ -1,0 +1,136 @@
+---
+title: "Writing Testable Components in React"
+publishedAt: "2025-07-16"
+summary: "Writing Testable Components in React"
+---
+
+React testing feels broken when your components are doing too much. If you're wrestling with mocked hooks, flaky async tests, and components that refuse to be tested in isolation, the problem isn't your testing skills - it's mixing business logic, state management, and UI rendering all in one place.
+
+The Container/View pattern fixes this by splitting your components into clean layers:
+
+1. a custom hook for data logic
+2. a container for orchestration
+3. a view for pure UI rendering
+
+With these layers each part stays simple, predictable and easy to test.
+
+### The Problem with Tangled Components
+
+```jsx
+const UserDashboard = () => {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  // This component runs API calls, sets state, handles loading and errors, and renders UI.
+  // That complexity makes it impossible to test cleanly.
+};
+```
+
+The Container/View Pattern
+
+```jsx
+// Custom hook for data logic and state
+const useUserDashboardData = () => {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // fetch user, posts, notifications, handle errors
+  // expose refresh and delete functions
+
+  return {
+    user,
+    posts,
+    notifications,
+    loading,
+    error,
+    handleRefresh: () => {},
+    handleDeletePost: (id) => {},
+  };
+};
+
+// Container component handles loading, error and passes props to view
+const UserDashboardContainer = () => {
+  const data = useUserDashboardData();
+
+  if (data.loading) return <LoadingSpinner />;
+  if (data.error) return <ErrorMessage message={data.error} />;
+
+  return <UserDashboardView data={data} />;
+};
+
+// View component renders UI based on props
+const UserDashboardView = ({
+  user,
+  posts,
+  notifications,
+  handleRefresh,
+  handleDeletePost,
+}) => (
+  <div>
+    <Header user={user} onRefresh={handleRefresh} />
+    <PostList posts={posts} onDelete={handleDeletePost} />
+    <NotificationsList items={notifications} />
+  </div>
+);
+```
+
+This structure leaves the view completely free of logic, making it trivial to render and test.
+
+### Why tests become easier
+
+1. Isolation and predictability
+
+   The view component only renders based on props. No hidden state, no side effects, nothing unexpected.
+
+2. Testing feels straightforward
+
+   ```jsx
+   test("displays posts correctly", () => {
+     const mockData = {
+       user: { name: "John Doe" },
+       posts: [
+         { id: 1, title: "First", content: "Hello world!" },
+         { id: 2, title: "React Testing", content: "Testing is fun!" },
+       ],
+       notifications: [],
+       handleRefresh: jest.fn(),
+       handleDeletePost: jest.fn(),
+     };
+
+     render(<UserDashboardView data={mockData} />);
+
+     expect(screen.getByText("First")).toBeInTheDocument();
+     expect(screen.getByText("React Testing")).toBeInTheDocument();
+   });
+   ```
+
+   Here you’re only verifying UI output based on props and there is no need to mock hooks.
+
+3. Testing all component states is easier
+
+   ```jsx
+   test("shows loading state", () => {
+     render(<UserDashboardView data={{ loading: true }} />);
+     expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
+   });
+
+   test("shows error message", () => {
+     render(<UserDashboardView data={{ error: "Failed to load" }} />);
+     expect(screen.getByText("Failed to load")).toBeInTheDocument();
+   });
+   ```
+
+### TL;DR
+
+Split your components into:
+
+- a custom hook for fetching and state management
+- a container to orchestrate logic and pass data
+- a view to render UI with props to pass in the data
+
+This makes components clean, predictable, and super easy to test.
