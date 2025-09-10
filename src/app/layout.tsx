@@ -1,7 +1,7 @@
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { personalData } from "@/data/data";
+import { personalData, websiteMetadata } from "@/data/data";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
@@ -15,41 +15,7 @@ const fontSans = Ubuntu({
   weight: "400",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(personalData.url),
-  title: {
-    default: "Duc Thinh | Software Developer",
-    template: `%s | ${personalData.name}`,
-  },
-  description: personalData.description,
-  openGraph: {
-    title: `${personalData.name}`,
-    description: personalData.description,
-    url: personalData.url,
-    siteName: `${personalData.name}`,
-    locale: "vi_VN",
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  twitter: {
-    title: `${personalData.name}`,
-    card: "summary_large_image",
-  },
-  verification: {
-    google: "",
-    yandex: "",
-  },
-};
+export const metadata: Metadata = websiteMetadata;
 
 export default function RootLayout({
   children,
