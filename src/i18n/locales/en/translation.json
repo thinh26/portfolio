@@ -1,0 +1,57 @@
+{
+  "personalData": {
+    "name": {
+      "short": "Thinh",
+      "full": "Thinh Nguyen Duc"
+    },
+    "description": "I'm an aspiring Software Developer passionate about building scalable, user-friendly applications.",
+    "summary": "I'm a Software Engineer with **2 years of experience**. I specialise in building scalable systems, improving developer experience, and solving platform-wide productivity and performance challenges across products. I hold a **Bachelor's degree in Information Technology** from Nha Trang University. I enjoy exploring new tech in my free time."
+  },
+  "experiencesData": [
+    {
+      "company": "FPT Software",
+      "href": "https://fptsoftware.com/",
+      "location": "Nha Trang",
+      "title": "Frontend Developer",
+      "logoUrl": "/assets/image/fsoft.png",
+      "start": "Dec 2023",
+      "end": "May 2025",
+      "description": [
+        "Participated in insurance-related projects utilizing ReactJS for web applications and React Native for mobile platforms.",
+        "Analyzed UI designs and user stories, collaborated closely with Backend teams to ensure timely delivery of features, and coordinated with Quality Control teams to resolve defects, including performing hotfixes when necessary.",
+        "Attended daily team meetings to report development progress, address blockers, and align on project goals."
+      ]
+    }
+  ],
+  "educationData": [
+    {
+      "school": "Nha Trang University (NTU)",
+      "href": "https://ntu.edu.vn/",
+      "degree": "Bachelor of Information Technology",
+      "logoUrl": "/assets/image/ntu.png",
+      "start": "Nov 2020",
+      "end": "Jul 2024",
+      "description": [
+        "Major in Software Engineer",
+        "Minor in Networks and Security",
+        "Minor in Mobile Applications"
+      ]
+    }
+  ],
+  "websiteData": {
+    "title": "Duc Thinh | Software Developer",
+    "description": "$t(personalData.description)"
+  },
+  "title": "Hi, I'm $t(personalData.name.short)",
+  "description": "$t(personalData.description)",
+  "location": "Nha Trang, Khanh Hoa, Viet Nam",
+  "about": "About",
+  "summary": "$t(personalData.summary)",
+  "workExperience": "Work Experience",
+  "education": "Education",
+  "mySkills": "My Skills",
+  "contactMe": {
+    "title": "Get in touch",
+    "subtitle": "You can contact me through one of these methods."
+  }
+}

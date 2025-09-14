@@ -1,0 +1,53 @@
+{
+  "personalData": {
+    "name": {
+      "short": "Thịnh",
+      "full": "Nguyễn Đức Thịnh"
+    },
+    "description": "Mình là một lập trình viên phần mềm đam mê phát triển ứng dụng mở rộng và thân thiện với người dùng.",
+    "summary": "Mình là Kỹ sư Phần mềm với **2 năm kinh nghiệm**. Mình tập trung vào việc xây dựng hệ thống có khả năng mở rộng, cải thiện trải nghiệm cho lập trình viên, và giải quyết các vấn đề về năng suất cũng như hiệu suất trên toàn nền tảng. Mình tốt nghiệp **Cử nhân Công nghệ Thông tin** tại Đại học Nha Trang. Ngoài công việc, mình thích khám phá công nghệ mới."
+  },
+  "experiencesData": [
+    {
+      "company": "FPT Software",
+      "href": "https://fptsoftware.com/",
+      "location": "Nha Trang",
+      "title": "Lập trình viên Frontend",
+      "logoUrl": "/assets/image/fsoft.png",
+      "start": "12/2023",
+      "end": "05/2025",
+      "description": [
+        "Tham gia các dự án liên quan đến bảo hiểm, sử dụng ReactJS cho ứng dụng web và React Native cho nền tảng di động.",
+        "Phân tích thiết kế giao diện (UI) và user stories, phối hợp chặt chẽ với đội Backend để đảm bảo tính năng được bàn giao đúng tiến độ, đồng thời làm việc với đội Kiểm thử (QC) để xử lý lỗi, bao gồm thực hiện hotfix khi cần thiết.",
+        "Tham gia họp nhóm hằng ngày để báo cáo tiến độ phát triển, giải quyết các vướng mắc và thống nhất mục tiêu dự án."
+      ]
+    }
+  ],
+  "educationData": [
+    {
+      "school": "Đại học Nha Trang (NTU)",
+      "href": "https://ntu.edu.vn/",
+      "degree": "Cử nhân Công nghệ thông tin",
+      "logoUrl": "/assets/image/ntu.png",
+      "start": "10/2020",
+      "end": "07/2024",
+      "description": ["Chuyên ngành Công nghệ phần mềm"]
+    }
+  ],
+  "websiteData": {
+    "title": "Đức Thịnh | Software Developer",
+    "description": "$t(personalData.description)"
+  },
+  "title": "Hi, $t(personalData.name.short) đây",
+  "description": "$t(personalData.description)",
+  "location": "Nha Trang, Khánh Hoà, Việt Nam",
+  "about": "Giới thiệu",
+  "summary": "$t(personalData.summary)",
+  "workExperience": "Kinh nghiệm làm việc",
+  "education": "Học vấn",
+  "mySkills": "Chuyên môn",
+  "contactMe": {
+    "title": "Liên hệ",
+    "subtitle": "Bạn có thể DM mình thông qua các phương thức bên dưới."
+  }
+}

@@ -1,13 +1,12 @@
 import { Icons } from "@/components/icons";
 import { HomeIcon, NotebookIcon } from "lucide-react";
-import { Metadata } from "next";
 
 export const personalData = {
   name: "Thịnh",
   fullname: "Nguyen Duc Thinh",
   username: "thinh26",
   initials: "DT",
-  url: "https://thinh26.com/",
+  url: "https://thinh26.com",
   location: "Nha Trang, Khanh Hoa, Viet Nam",
   locationLink:
     "https://www.google.com/maps/place/Nha+Trang,+Kh%C3%A1nh+H%C3%B2a/",
@@ -15,52 +14,8 @@ export const personalData = {
     "I'm an aspiring Software Developer passionate about building scalable, user-friendly applications.",
   summary:
     "I'm a Software Engineer with **2 years of experience**. I specialise in building scalable systems, improving developer experience, and solving platform-wide productivity and performance challenges across products. I hold a **Bachelor's degree in Information Technology** from Nha Trang University. I enjoy exploring new tech in my free time.",
-  avatarUrl: "/me.jpg",
+  avatarUrl: "/assets/image/me.jpg",
 } as const;
-
-export const websiteData = {
-  title: "Duc Thinh | Software Developer",
-  description: personalData.description,
-  locale: "vi_VN",
-  alternateLocale: ["en_US"],
-} as const;
-
-export const websiteMetadata: Metadata = {
-  metadataBase: new URL(personalData.url),
-  title: {
-    default: websiteData.title,
-    template: `%s | ${websiteData.title}`,
-  },
-  description: personalData.description,
-  openGraph: {
-    title: `${websiteData.title}`,
-    description: personalData.description,
-    url: personalData.url,
-    siteName: `${personalData.username}`,
-    locale: websiteData.locale,
-    alternateLocale: [...websiteData.alternateLocale],
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  twitter: {
-    title: `${websiteData.title}`,
-    card: "summary_large_image",
-  },
-  verification: {
-    google: "",
-    yandex: "",
-  },
-};
 
 export const skillsData = [
   {
@@ -177,7 +132,7 @@ export const experiencesData = [
     href: "https://fptsoftware.com/",
     location: "Nha Trang",
     title: "Frontend Developer",
-    logoUrl: "/fsoft.png",
+    logoUrl: "/assets/image/fsoft.png",
     start: "Dec 2023",
     end: "May 2025",
     description: [
@@ -193,7 +148,7 @@ export const educationData = [
     school: "Nha Trang University (NTU)",
     href: "https://ntu.edu.vn/",
     degree: "Bachelor of Information Technology",
-    logoUrl: "/ntu.png",
+    logoUrl: "/assets/image/ntu.png",
     start: "Nov 2020",
     end: "Jul 2024",
     description: [
