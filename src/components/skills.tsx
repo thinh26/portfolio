@@ -6,6 +6,7 @@ import { skillsData } from "@/data/data";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 
 interface SkillsProps {
   delay?: number;
@@ -15,13 +16,16 @@ export function Skills({ delay = 0 }: SkillsProps) {
   const [selectedSkillCategory, setSelectedSkillCategory] = useState<string>(
     skillsData[0]?.category || "",
   );
+  const { t } = useT();
 
   return (
     <section id="skills">
       <div className="flex min-h-0 flex-col gap-y-6">
         <BlurFade delay={delay}>
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter">My Skills</h2>
+            <h2 className="text-3xl font-bold tracking-tighter">
+              {t("mySkills")}
+            </h2>
           </div>
         </BlurFade>
 

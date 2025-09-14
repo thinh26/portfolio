@@ -1,4 +1,4 @@
-let CACHE_DYNAMIC_NAME = "dynamic-v1.1";
+let CACHE_DYNAMIC_NAME = "dynamic-v1.2";
 
 self.addEventListener("install", function (event) {
   console.log("[Service Worker] Installing Service Worker ....", event);

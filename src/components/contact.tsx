@@ -1,5 +1,3 @@
-"use client";
-
 import BlurFade from "@/components/magicui/blur-fade";
 import { SubmitButton } from "@/components/SubmitButton";
 import { sendEmail } from "@/lib/sendEmail";
@@ -8,22 +6,24 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { ProjectCard } from "./project-card";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { getT } from "@/i18n";
 
 interface ContactProps {
   delay?: number;
 }
 
-export function Contact({ delay = 0 }: ContactProps) {
+export async function Contact({ delay = 0 }: ContactProps) {
+  const { t } = await getT();
   return (
     <section id="contact">
       <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
         <BlurFade delay={delay}>
           <div className="space-y-3">
             <h2 className="text-3xl font-bold tracking-tighter">
-              Get in Touch
+              {t("contactMe.title")}
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              You can contact me through one of these methods.
+              {t("contactMe.subtitle")}
             </p>
           </div>
         </BlurFade>
