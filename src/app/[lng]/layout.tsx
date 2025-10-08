@@ -101,15 +101,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{
+    lng: string;
+  }>;
 }>) {
+  const { lng } = await params;
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lng} suppressHydrationWarning>
       <head>
-        <meta httpEquiv="Content-Language" content={i18next.language} />
+        <meta httpEquiv="Content-Language" content={lng} />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       </head>
       <body
