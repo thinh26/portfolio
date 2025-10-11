@@ -1,4 +1,4 @@
-let CACHE_DYNAMIC_NAME = "dynamic-v1.5";
+let CACHE_DYNAMIC_NAME = "dynamic-v1.6";
 
 self.addEventListener("install", function (event) {
   console.log("[Service Worker] Installing Service Worker ....", event);
@@ -14,9 +14,9 @@ self.addEventListener("activate", (event) => {
             console.log("[Service Worker] Removing old cache.", key);
             return caches.delete(key);
           }
-        }),
+        })
       );
-    }),
+    })
   );
 
   return self.clients.claim();
@@ -26,13 +26,19 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data.action === "skipWaiting") {
     console.log(
-      "[Service Worker] Nhận yêu cầu skipWaiting, kích hoạt SW mới ngay !",
+      "[Service Worker] Nhận yêu cầu skipWaiting, kích hoạt SW mới ngay !"
     );
     self.skipWaiting();
   }
 });
 
 self.addEventListener("fetch", function (event) {
+  const requestUrl = new URL(event.request.url);
+
+  if (requestUrl.protocol !== "http:" && requestUrl.protocol !== "https:") {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(function (response) {
       if (response) {
@@ -49,6 +55,6 @@ self.addEventListener("fetch", function (event) {
             console.log(err);
           });
       }
-    }),
+    })
   );
 });
