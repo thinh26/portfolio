@@ -23,12 +23,18 @@ export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lng: string }>;
+}): Promise<Metadata> {
   const { t } = await getT();
+  const { lng } = await params;
+
   return {
     metadataBase: new URL(personalData.url),
     alternates: {
-      canonical: `${personalData.url}/en`,
+      canonical: `${personalData.url}/${lng}`,
       languages: {
         en: `${personalData.url}/en`,
         vi: `${personalData.url}/vi`,
@@ -97,6 +103,12 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: {
       google: "",
       yandex: "",
+    },
+    other: {
+      "geo.region": "VN",
+      "geo.placename": "Nha Trang",
+      "geo.position": "12.239318;109.197091",
+      ICBM: "12.239318, 109.197091",
     },
   };
 }
