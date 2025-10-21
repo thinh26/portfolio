@@ -6,7 +6,7 @@ export const personalData = {
   fullname: "Nguyen Duc Thinh",
   username: "thinh26",
   initials: "DT",
-  url: "https://thinh26.com",
+  url: "https://www.thinh26.com",
   location: "Nha Trang, Khanh Hoa, Viet Nam",
   locationLink:
     "https://www.google.com/maps/place/Nha+Trang,+Kh%C3%A1nh+H%C3%B2a/",
