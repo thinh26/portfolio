@@ -38,7 +38,7 @@ export async function generateMetadata({
       languages: {
         en: `${personalData.url}/en`,
         vi: `${personalData.url}/vi`,
-        "x-default": `${personalData.url}`,
+        "x-default": `${personalData.url}/en`,
       },
     },
     title: {
