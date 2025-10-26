@@ -4,7 +4,7 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   const locales = ["en", "vi"];
   const baseUrl = personalData.url;
-  const baseModifiedTime = "2025-10-21T07:45:48.030Z";
+  const baseModifiedTime = "2025-10-26T09:53:16.462Z";
   const baseDate = new Date(baseModifiedTime);
 
   return locales.flatMap((locale, i) => {
@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
           languages: {
             en: `${baseUrl}/en`,
             vi: `${baseUrl}/vi`,
-            "x-default": baseUrl,
+            "x-default": `${baseUrl}/en`,
           },
         },
       },
