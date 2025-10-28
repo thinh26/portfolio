@@ -104,12 +104,12 @@ export async function generateMetadata({
       google: "",
       yandex: "",
     },
-    other: {
-      "geo.region": "VN",
-      "geo.placename": "Nha Trang",
-      "geo.position": "12.239318;109.197091",
-      ICBM: "12.239318, 109.197091",
-    },
+    // other: {
+    //   "geo.region": "VN",
+    //   "geo.placename": "Nha Trang",
+    //   "geo.position": "12.239318;109.197091",
+    //   ICBM: "12.239318, 109.197091",
+    // },
   };
 }
 
