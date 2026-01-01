@@ -9,13 +9,26 @@
   },
   "experiencesData": [
     {
+      "company": "Công ty TNHH Nhà nước MTV Yến sào Khánh Hòa",
+      "href": "https://yensaokhanhhoa.com.vn/",
+      "location": "Nha Trang",
+      "title": "Lập trình viên phần mềm",
+      "logoUrl": "/assets/image/yskh.png",
+      "start": "09/2025",
+      "end": "Hiện tại",
+      "description": [
+        "Thiết kế, cải tiến và vận hành hệ thống nhà thông minh dựa trên Home Assistant, xây dựng các kịch bản tự động hóa, logic điều khiển và tích hợp thiết bị nhằm nâng cao mức độ thông minh và độ ổn định của hệ thống.",
+        "Nghiên cứu và huấn luyện các mô hình thị giác máy tính (Computer Vision) cho các bài toán nhận diện, phát hiện và đếm số lượng, ứng dụng trong các hệ thống giám sát thông minh."
+      ]
+    },
+    {
       "company": "FPT Software",
       "href": "https://fptsoftware.com/",
       "location": "Nha Trang",
       "title": "Lập trình viên Frontend",
       "logoUrl": "/assets/image/fsoft.png",
       "start": "12/2023",
-      "end": "05/2025",
+      "end": "07/2025",
       "description": [
         "Tham gia các dự án liên quan đến bảo hiểm, sử dụng ReactJS cho ứng dụng web và React Native cho nền tảng di động.",
         "Phân tích thiết kế giao diện (UI) và user stories, phối hợp chặt chẽ với đội Backend để đảm bảo tính năng được bàn giao đúng tiến độ, đồng thời làm việc với đội Kiểm thử (QC) để xử lý lỗi, bao gồm thực hiện hotfix khi cần thiết.",

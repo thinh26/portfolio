@@ -9,13 +9,25 @@
   },
   "experiencesData": [
     {
+      "company": "Khanh Hoa Salanganes Nest",
+      "href": "https://yensaokhanhhoa.com.vn/",
+      "location": "Nha Trang",
+      "title": "Software Developer",
+      "logoUrl": "/assets/image/yskh.png",
+      "start": "Sep 2025",
+      "description": [
+        "Designed, improved, and maintained a Home Assistant–based smart home system, implementing automation workflows, control logic, and device integrations to enhance system intelligence and reliability.",
+        "Conducted research and training of computer vision models for object recognition, detection, and counting, applied in intelligent monitoring systems."
+      ]
+    },
+    {
       "company": "FPT Software",
       "href": "https://fptsoftware.com/",
       "location": "Nha Trang",
       "title": "Frontend Developer",
       "logoUrl": "/assets/image/fsoft.png",
       "start": "Dec 2023",
-      "end": "May 2025",
+      "end": "Jul 2025",
       "description": [
         "Participated in insurance-related projects utilizing ReactJS for web applications and React Native for mobile platforms.",
         "Analyzed UI designs and user stories, collaborated closely with Backend teams to ensure timely delivery of features, and coordinated with Quality Control teams to resolve defects, including performing hotfixes when necessary.",
