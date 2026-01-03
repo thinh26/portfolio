@@ -1,10 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
 import acceptLanguage from "accept-language";
 import {
-  fallbackLng,
   languages,
   cookieName,
   headerName,
+  PATH_LOCALE_MAP,
+  DOMAIN_LOCALE_MAP,
 } from "@/i18n/settings";
 
 acceptLanguage.languages(languages);
@@ -17,39 +18,45 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
+  const { pathname, search } = req.nextUrl;
+  console.log(`pathname: ${pathname}`);
+  const hostname = req.headers.get("host")?.split(":")[0];
+  console.log(`hostName: ${hostname}`);
+
   if (
     req.nextUrl.pathname.indexOf("icon") > -1 ||
     req.nextUrl.pathname.indexOf("chrome") > -1
   )
     return NextResponse.next();
-  let lng: string | undefined | null;
-  if (req.cookies.has(cookieName))
-    lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
-  if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
-  if (!lng) lng = fallbackLng;
 
-  const lngInPath = languages.find((loc) =>
-    req.nextUrl.pathname.startsWith(`/${loc}`),
-  );
+  // Legacy: All old Prefix-based routing (/en, /vi) redirect to new Domain-based routing (.com, .vn)
+  const segments = pathname.split("/").filter(Boolean);
+  const pathLocale = segments[0];
+  console.log(`path locale: ${pathLocale}`);
+  if (pathLocale && pathLocale in PATH_LOCALE_MAP) {
+    const newDomain = PATH_LOCALE_MAP[pathLocale];
+    const newPath = "/" + segments.slice(1).join("/");
+    console.log(`new domain: ${newDomain}`);
+    console.log(`new path: ${newPath}`);
+
+    const redirectUrl = new URL(`${newPath || "/"}${search}`, newDomain);
+    console.log(`redirect url: ${redirectUrl.toString()}`);
+
+    return process.env.NODE_ENV === "production"
+      ? NextResponse.redirect(redirectUrl, 301)
+      : NextResponse.next();
+  }
+
+  // Domain-based locale resolution
+  const locale =
+    hostname && DOMAIN_LOCALE_MAP[hostname as keyof typeof DOMAIN_LOCALE_MAP];
   const headers = new Headers(req.headers);
-  headers.set(headerName, lngInPath || lng);
-
-  // Redirect if lng in path is not supported
-  if (!lngInPath && !req.nextUrl.pathname.startsWith("/_next")) {
-    return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url),
-    );
-  }
-
-  if (req.headers.has("referer")) {
-    const refererUrl = new URL(req.headers.get("referer") || "");
-    const lngInReferer = languages.find((l) =>
-      refererUrl.pathname.startsWith(`/${l}`),
-    );
-    const response = NextResponse.next({ headers });
-    if (lngInReferer) response.cookies.set(cookieName, lngInReferer);
-    return response;
-  }
-
-  return NextResponse.next({ headers });
+  headers.set(headerName, locale ?? "");
+  console.log(`domain based locale: ${locale}`);
+  const response = NextResponse.next({ headers });
+  response.cookies.set(cookieName, locale ?? "", {
+    path: "/",
+    httpOnly: false,
+  });
+  return response;
 }

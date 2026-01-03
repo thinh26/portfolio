@@ -1,24 +1,31 @@
-import { personalData } from "@/data/data";
 import { MetadataRoute } from "next";
+import { parseISO, addMinutes, set } from "date-fns";
+import { PATH_LOCALE_MAP } from "@/i18n/settings";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const locales = ["en", "vi"];
-  const baseUrl = personalData.url;
-  const baseModifiedTime = "2025-10-26T09:53:16.462Z";
-  const baseDate = new Date(baseModifiedTime);
+  const domains = ["com", "vn"];
+  const baseUrl = "https://www.thinh26";
+  const baseModifiedTime = set(new Date(0), {
+    date: 3,
+    month: 0, // 1-12 is 0-11
+    year: 2026,
+    hours: 10,
+    minutes: 40,
+    seconds: 11,
+  }).toISOString();
+  const baseDate = parseISO(baseModifiedTime);
 
-  return locales.flatMap((locale, i) => {
-    const newDate = new Date(baseDate.getTime() + i * 60 * 1000);
+  return domains.flatMap((domain, i) => {
+    const newDate = addMinutes(baseDate, i);
     const lastmod = newDate.toISOString();
     return [
       {
-        url: `${baseUrl}/${locale}`,
+        url: `${baseUrl}.${domain}`,
         lastModified: lastmod,
         alternates: {
           languages: {
-            en: `${baseUrl}/en`,
-            vi: `${baseUrl}/vi`,
-            "x-default": `${baseUrl}/en`,
+            ...PATH_LOCALE_MAP,
+            "x-default": `${baseUrl}.${domain}`,
           },
         },
       },

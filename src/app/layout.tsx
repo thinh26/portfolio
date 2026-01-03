@@ -1,44 +1,35 @@
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { websiteData, websiteMetadata } from "@/data/metadata";
+import { websiteData } from "@/data/metadata";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Ubuntu } from "next/font/google";
+import { Bai_Jamjuree } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import ServiceWorker from "@/components/ServiceWorker";
-import { languages } from "@/i18n/settings";
+import { DOMAIN_LOCALE_MAP, languages, PATH_LOCALE_MAP } from "@/i18n/settings";
 import { getT } from "@/i18n";
 import { personalData } from "@/data/data";
-import i18next from "i18next";
+import { headers } from "next/headers";
 
-const fontSans = Ubuntu({
+const fontSans = Bai_Jamjuree({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: "400",
+  weight: ["400", "500", "600", "700"],
 });
 
-export async function generateStaticParams() {
-  return languages.map((lng) => ({ lng }));
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ lng: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT();
-  const { lng } = await params;
+  const hostname = headers().get("host")?.split(":").at(0);
 
   return {
-    metadataBase: new URL(personalData.url),
+    metadataBase: new URL(`https://${hostname}`),
     alternates: {
-      canonical: `${personalData.url}/${lng}`,
+      canonical: `https://${hostname}`,
       languages: {
-        en: `${personalData.url}/en`,
-        vi: `${personalData.url}/vi`,
-        "x-default": `${personalData.url}/en`,
+        ...PATH_LOCALE_MAP,
+        "x-default": `https://${hostname}`,
       },
     },
     title: {
@@ -57,27 +48,28 @@ export async function generateMetadata({
     appleWebApp: true,
     appLinks: {
       android: {
-        url: personalData.url,
+        url: `https://${hostname}`,
         app_name: "Google Chrome",
         package: "com.android.chrome",
       },
       ios: {
-        url: personalData.url,
+        url: `https://${hostname}`,
         app_name: "Google Chrome",
         app_store_id: 535886823,
       },
       web: {
-        url: personalData.url,
+        url: `https://${hostname}`,
         should_fallback: true,
       },
     },
     openGraph: {
       title: t("websiteData.title"),
       description: t("description"),
-      url: personalData.url,
+      url: `https://${hostname}`,
       siteName: t("websiteData.title"),
-      locale: websiteData.locale,
-      alternateLocale: [...websiteData.alternateLocale],
+      locale: DOMAIN_LOCALE_MAP[hostname ?? ""] === "en" ? "en_US" : "vi_VN",
+      alternateLocale:
+        DOMAIN_LOCALE_MAP[hostname ?? ""] === "en" ? ["vi_VN"] : ["en_US"],
       type: "website",
     },
     robots: {
@@ -122,11 +114,12 @@ export default async function RootLayout({
     lng: string;
   }>;
 }>) {
-  const { lng } = await params;
+  const hostname = headers().get("host")?.split(":").at(0);
+  const language = DOMAIN_LOCALE_MAP[hostname ?? ""];
   return (
-    <html lang={lng} suppressHydrationWarning>
+    <html lang={language} suppressHydrationWarning>
       <head>
-        <meta httpEquiv="Content-Language" content={lng} />
+        <meta httpEquiv="Content-Language" content={language} />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       </head>
       <body

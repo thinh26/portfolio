@@ -13,8 +13,8 @@ i18next
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
-        import(`./locales/${language}/${namespace}.json`),
-    ),
+        import(`./locales/${language}/${namespace}.json`)
+    )
   )
   // .use(runsOnServerSide ? LocizeBackend : resourcesToBackend((language: string, namespace: string) => import(`./locales/${language}/${namespace}.json`))) // locize backend could be used, but prefer to keep it in sync with server side
   .init({
