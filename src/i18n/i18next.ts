@@ -9,7 +9,6 @@ const runsOnServerSide = typeof window === "undefined";
 
 i18next
   .use(initReactI18next)
-  .use(LanguageDetector)
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
@@ -19,15 +18,14 @@ i18next
   // .use(runsOnServerSide ? LocizeBackend : resourcesToBackend((language: string, namespace: string) => import(`./locales/${language}/${namespace}.json`))) // locize backend could be used, but prefer to keep it in sync with server side
   .init({
     // debug: process.env.NODE_ENV === "development",
-    supportedLngs: languages,
     fallbackLng,
     lng: undefined, // let detect the language on client side
     fallbackNS: defaultNS,
     defaultNS,
-    detection: {
-      order: ["path", "htmlTag", "cookie", "navigator"],
-    },
     preload: runsOnServerSide ? languages : [],
+    interpolation: {
+      escapeValue: false,
+    },
     // backend: {
     //   projectId: '01b2e5e8-6243-47d1-b36f-963dbb8bcae3'
     // }
