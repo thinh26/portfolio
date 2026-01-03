@@ -1,7 +1,6 @@
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { websiteData } from "@/data/metadata";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Bai_Jamjuree } from "next/font/google";
@@ -11,7 +10,8 @@ import ServiceWorker from "@/components/ServiceWorker";
 import { DOMAIN_LOCALE_MAP, languages, PATH_LOCALE_MAP } from "@/i18n/settings";
 import { getT } from "@/i18n";
 import { personalData } from "@/data/data";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
+import I18nClientWrapper from "@/components/i18n/I18nClientWrapper";
 
 const fontSans = Bai_Jamjuree({
   subsets: ["latin"],
@@ -129,13 +129,15 @@ export default async function RootLayout({
         )}
       >
         <ServiceWorker>
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <TooltipProvider delayDuration={0}>
-              {children}
-              <Toaster position="top-right" />
-              <Navbar />
-            </TooltipProvider>
-          </ThemeProvider>
+          <I18nClientWrapper language={language}>
+            <ThemeProvider attribute="class" defaultTheme="light">
+              <TooltipProvider delayDuration={0}>
+                {children}
+                <Toaster position="top-right" />
+                <Navbar />
+              </TooltipProvider>
+            </ThemeProvider>
+          </I18nClientWrapper>
         </ServiceWorker>
       </body>
     </html>
