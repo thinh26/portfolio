@@ -1,8 +1,9 @@
 import { personalData } from "@/data/data";
 import { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = personalData.url;
+  const hostname = headers().get("host")?.split(":").at(0);
 
   return {
     rules: {
@@ -11,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap:
       process.env.NODE_ENV === "production"
-        ? `${baseUrl}/sitemap.xml`
-        : "http://localhost:3000/sitemap.xml",
+        ? `${hostname}/sitemap.xml`
+        : `http://${hostname}:3000/sitemap.xml`,
   };
 }

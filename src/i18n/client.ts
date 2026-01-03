@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FlatNamespace, KeyPrefix } from "i18next";
 import i18next from "./i18next";
@@ -10,6 +10,7 @@ import {
   UseTranslationResponse,
   FallbackNs,
 } from "react-i18next";
+import { cookieName } from "./settings";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -20,9 +21,9 @@ export function useT<
   KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(
   ns?: Ns,
-  options?: UseTranslationOptions<KPrefix>,
+  options?: UseTranslationOptions<KPrefix>
 ): UseTranslationResponse<FallbackNs<Ns>, KPrefix> {
-  const lng = useParams()?.lng;
+  const lng = Cookies.get(cookieName) ?? "";
   if (typeof lng !== "string")
     throw new Error("useT is only available inside /app/[lng]");
   if (runsOnServerSide && i18next.resolvedLanguage !== lng) {
