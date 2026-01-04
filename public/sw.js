@@ -1,4 +1,6 @@
-let CACHE_DYNAMIC_NAME = "dynamic-v1.10.4";
+let CACHE_DYNAMIC_NAME = "dynamic-v1.10.5";
+
+const EXCLUDED_URLS = ["/sitemap.xml", "/robots.txt"];
 
 self.addEventListener("install", function (event) {
   console.log("[Service Worker] Installing Service Worker ....", event);
@@ -37,6 +39,11 @@ self.addEventListener("fetch", function (event) {
 
   if (requestUrl.protocol !== "http:" && requestUrl.protocol !== "https:") {
     return;
+  }
+
+  // Loại trừ sitemap & robots
+  if (EXCLUDED_URLS.includes(requestUrl.pathname)) {
+    return; // để browser fetch trực tiếp từ network
   }
 
   event.respondWith(
