@@ -4,6 +4,7 @@ import { PATH_LOCALE_MAP } from "@/i18n/settings";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  const fallbackUrl = process.env.NEXT_PUBLIC_SITEMAP_FALLBACK_URL ?? "";
   const baseModifiedTime = set(new Date(0), {
     date: 3,
     month: 0, // 1-12 is 0-11
@@ -22,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: {
         languages: {
           ...PATH_LOCALE_MAP,
-          "x-default": siteUrl,
+          "x-default": fallbackUrl,
         },
       },
     },
