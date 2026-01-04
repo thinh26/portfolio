@@ -9,9 +9,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     date: 4,
     month: 0, // 1-12 is 0-11
     year: 2026,
-    hours: 16,
+    hours: 10,
     minutes: 45,
-    seconds: 7,
+    seconds: 33,
+    milliseconds: 112,
   }).toISOString();
   const baseDate = parseISO(baseModifiedTime);
   const lastmod = baseDate.toISOString();
