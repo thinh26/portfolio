@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: `https://${hostname}`,
       languages: {
         ...PATH_LOCALE_MAP,
-        "x-default": `https://${hostname}`,
+        "x-default": PATH_LOCALE_MAP["en"],
       },
     },
     title: {
