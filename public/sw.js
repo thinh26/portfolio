@@ -1,4 +1,4 @@
-let CACHE_DYNAMIC_NAME = "dynamic-v1.10.5";
+let CACHE_DYNAMIC_NAME = "dynamic-v1.10.6";
 
 const EXCLUDED_URLS = ["/sitemap.xml", "/robots.txt"];
 
