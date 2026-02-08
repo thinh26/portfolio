@@ -1,17 +1,15 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import acceptLanguage from "accept-language";
 import {
+  fallbackLng,
   languages,
   cookieName,
   headerName,
-  PATH_LOCALE_MAP,
-  DOMAIN_LOCALE_MAP,
 } from "@/i18n/settings";
 
 acceptLanguage.languages(languages);
 
 export const config = {
-  // matcher: '/:lng*'
   matcher: [
     "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sw_prod.js|sitemap.xml|robots.txt|opengraph-image.png|twitter-image.png|site.webmanifest).*)",
   ],
@@ -19,37 +17,93 @@ export const config = {
 
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
-  const hostname = req.headers.get("host")?.split(":")[0];
+  const origin = req.nextUrl.origin;
+  console.log(origin);
+  const isDev = process.env.NODE_ENV !== "production";
 
-  if (
-    req.nextUrl.pathname.indexOf("icon") > -1 ||
-    req.nextUrl.pathname.indexOf("chrome") > -1
-  )
+  if (pathname.includes("icon") || pathname.includes("chrome")) {
     return NextResponse.next();
-
-  // Legacy: All old Prefix-based routing (/en, /vi) redirect to new Domain-based routing (.com, .vn)
-  const segments = pathname.split("/").filter(Boolean);
-  const pathLocale = segments[0];
-  if (pathLocale && pathLocale in PATH_LOCALE_MAP) {
-    const newDomain = PATH_LOCALE_MAP[pathLocale];
-    const newPath = "/" + segments.slice(1).join("/");
-
-    const redirectUrl = new URL(`${newPath || "/"}${search}`, newDomain);
-
-    return process.env.NODE_ENV === "production"
-      ? NextResponse.redirect(redirectUrl, 301)
-      : NextResponse.next();
   }
 
-  // Domain-based locale resolution
-  const locale =
-    hostname && DOMAIN_LOCALE_MAP[hostname as keyof typeof DOMAIN_LOCALE_MAP];
+  const lngInPath = languages.find((l) => pathname.startsWith(`/${l}`));
+
+  /* =====================================================
+   * DEV ENV — đơn giản: chỉ cần lang trong path
+   * ===================================================== */
+  if (isDev) {
+    const finalLang = lngInPath ?? fallbackLng;
+
+    if (!lngInPath) {
+      return NextResponse.rewrite(
+        new URL(`/${finalLang}${pathname}${search}`, req.url),
+      );
+    }
+
+    const headers = new Headers(req.headers);
+    headers.set(headerName, finalLang);
+
+    const res = NextResponse.next({ headers });
+    res.cookies.set(cookieName, finalLang);
+    return res;
+  }
+
+  /* =====================================================
+   * PROD ENV — DOMAIN FIRST
+   * ===================================================== */
+
+  const isVN = origin.endsWith(".vn");
+  const isCOM = origin.endsWith(".com");
+
+  /* ---------- 1. REDIRECT (canonical domain) ---------- */
+
+  // .vn chỉ cho vi
+  if (isVN && lngInPath && lngInPath !== "vi") {
+    return NextResponse.redirect(
+      new URL(`${pathname.replace(`/${lngInPath}`, "")}${search}`, origin),
+      301,
+    );
+  }
+
+  // .com không cho /vi
+  if (isCOM && pathname.startsWith("/vi")) {
+    return NextResponse.redirect(
+      new URL(`${pathname.replace("/vi", "")}${search}`, origin),
+      301,
+    );
+  }
+
+  /* ---------- 2. REWRITE (internal routing) ---------- */
+
+  let rewriteUrl: URL | null = null;
+  let finalLang: string;
+
+  if (isVN) {
+    finalLang = "vi";
+    if (!pathname.startsWith("/vi")) {
+      rewriteUrl = new URL(`/vi${pathname}${search}`, req.url);
+    }
+  } else {
+    // .com
+    finalLang =
+      lngInPath ??
+      acceptLanguage.get(req.cookies.get(cookieName)?.value) ??
+      acceptLanguage.get(req.headers.get("Accept-Language")) ??
+      fallbackLng;
+
+    if (!lngInPath) {
+      rewriteUrl = new URL(`/${finalLang}${pathname}${search}`, req.url);
+    }
+  }
+
+  /* ---------- 3. SET HEADER + COOKIE (LAST STEP) ---------- */
+
   const headers = new Headers(req.headers);
-  headers.set(headerName, locale ?? "");
-  const response = NextResponse.next({ headers });
-  response.cookies.set(cookieName, locale ?? "", {
-    path: "/",
-    httpOnly: false,
-  });
-  return response;
+  headers.set(headerName, finalLang);
+
+  const res = rewriteUrl
+    ? NextResponse.rewrite(rewriteUrl, { headers })
+    : NextResponse.next({ headers });
+
+  res.cookies.set(cookieName, finalLang);
+  return res;
 }

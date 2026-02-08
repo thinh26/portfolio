@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development next dev",
     "build": "cross-env NODE_ENV=production next build",
     "buildSw": "javascript-obfuscator public/sw.js --output public/sw_prod.js",
-    "start": "next start",
+    "start": "cross-env NODE_ENV=production next start",
     "lint": "next lint",
     "prettier:format": "prettier --write .",
     "prettier:check": "prettier --check ."

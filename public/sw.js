@@ -16,9 +16,9 @@ self.addEventListener("activate", (event) => {
             console.log("[Service Worker] Removing old cache.", key);
             return caches.delete(key);
           }
-        })
+        }),
       );
-    })
+    }),
   );
 
   return self.clients.claim();
@@ -28,7 +28,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data.action === "skipWaiting") {
     console.log(
-      "[Service Worker] Nhận yêu cầu skipWaiting, kích hoạt SW mới ngay !"
+      "[Service Worker] Nhận yêu cầu skipWaiting, kích hoạt SW mới ngay !",
     );
     self.skipWaiting();
   }
@@ -62,6 +62,6 @@ self.addEventListener("fetch", function (event) {
             console.log(err);
           });
       }
-    })
+    }),
   );
 });
