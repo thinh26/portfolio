@@ -16,9 +16,7 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
-  const { pathname, search } = req.nextUrl;
-  const origin = req.nextUrl.origin;
-  console.log(origin);
+  const { pathname, search, origin, hostname } = req.nextUrl;
   const isDev = process.env.NODE_ENV !== "production";
 
   if (pathname.includes("icon") || pathname.includes("chrome")) {
@@ -51,8 +49,8 @@ export function middleware(req: NextRequest) {
    * PROD ENV — DOMAIN FIRST
    * ===================================================== */
 
-  const isVN = origin.endsWith(".vn");
-  const isCOM = origin.endsWith(".com");
+  const isVN = hostname.endsWith(".vn");
+  const isCOM = hostname.endsWith(".com");
 
   /* ---------- 1. REDIRECT (canonical domain) ---------- */
 
