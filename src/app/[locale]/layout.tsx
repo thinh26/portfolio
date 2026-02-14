@@ -8,10 +8,11 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import ServiceWorker from "@/components/ServiceWorker";
 import { DOMAIN_LOCALE_MAP, languages, PATH_LOCALE_MAP } from "@/i18n/settings";
-import { getT } from "@/i18n";
+import { NextIntlClientProvider } from "next-intl";
 import { personalData } from "@/data/data";
 import { cookies, headers } from "next/headers";
-import I18nClientWrapper from "@/components/i18n/I18nClientWrapper";
+import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
 const fontSans = Bai_Jamjuree({
   subsets: ["latin"],
@@ -20,7 +21,7 @@ const fontSans = Bai_Jamjuree({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getT();
+  const t = await getTranslations();
   const hostname = headers().get("host")?.split(":").at(0);
 
   return {
@@ -36,7 +37,9 @@ export async function generateMetadata(): Promise<Metadata> {
       default: t("websiteData.title"),
       template: `$s | ${t("websiteData.title")}`,
     },
-    description: t("description"),
+    description: t("description", {
+      descriptionText: t("personalData.description"),
+    }),
     creator: t("personalData.name.full"),
     authors: [
       {
@@ -64,7 +67,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: t("websiteData.title"),
-      description: t("description"),
+      description: t("description", {
+        descriptionText: t("personalData.description"),
+      }),
       url: `https://${hostname}`,
       siteName: t("websiteData.title"),
       locale: DOMAIN_LOCALE_MAP[hostname ?? ""] === "en" ? "en_US" : "vi_VN",
@@ -86,7 +91,9 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: t("websiteData.title"),
-      description: t("description"),
+      description: t("description", {
+        descriptionText: t("personalData.description"),
+      }),
       creator: `@${personalData.username}`,
       creatorId: "3221138588",
       site: `@${personalData.username}`,
@@ -125,20 +132,20 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
-          fontSans.variable
+          fontSans.variable,
         )}
       >
-        <ServiceWorker>
-          <I18nClientWrapper language={language}>
-            <ThemeProvider attribute="class" defaultTheme="light">
-              <TooltipProvider delayDuration={0}>
-                {children}
-                <Toaster position="top-right" />
-                <Navbar />
-              </TooltipProvider>
-            </ThemeProvider>
-          </I18nClientWrapper>
-        </ServiceWorker>
+        {/* <ServiceWorker> */}
+        <NextIntlClientProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <TooltipProvider delayDuration={0}>
+              {children}
+              <Toaster position="top-right" />
+              <Navbar />
+            </TooltipProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
+        {/* </ServiceWorker> */}
       </body>
     </html>
   );

@@ -1,55 +1,40 @@
-import { NextResponse, NextRequest } from "next/server";
-import acceptLanguage from "accept-language";
-import {
-  languages,
-  cookieName,
-  headerName,
-  PATH_LOCALE_MAP,
-  DOMAIN_LOCALE_MAP,
-} from "@/i18n/settings";
-
-acceptLanguage.languages(languages);
+import { NextRequest, NextResponse } from "next/server";
+import { PATH_LOCALE_MAP } from "./i18n/settings";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 export const config = {
-  // matcher: '/:lng*'
   matcher: [
     "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sw_prod.js|sitemap.xml|robots.txt|opengraph-image.png|twitter-image.png|site.webmanifest).*)",
   ],
 };
 
-export function middleware(req: NextRequest) {
-  const { pathname, search } = req.nextUrl;
-  const hostname = req.headers.get("host")?.split(":")[0];
+export function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+  const hostname = request.headers.get("host")?.split(":")[0];
 
-  if (
-    req.nextUrl.pathname.indexOf("icon") > -1 ||
-    req.nextUrl.pathname.indexOf("chrome") > -1
-  )
+  const isDev = process.env.NODE_ENV !== "production";
+
+  if (pathname.includes("icon") || pathname.includes("chrome")) {
     return NextResponse.next();
-
-  // Legacy: All old Prefix-based routing (/en, /vi) redirect to new Domain-based routing (.com, .vn)
-  const segments = pathname.split("/").filter(Boolean);
-  const pathLocale = segments[0];
-  if (pathLocale && pathLocale in PATH_LOCALE_MAP) {
-    const newDomain = PATH_LOCALE_MAP[pathLocale];
-    const newPath = "/" + segments.slice(1).join("/");
-
-    const redirectUrl = new URL(`${newPath || "/"}${search}`, newDomain);
-
-    return process.env.NODE_ENV === "production"
-      ? NextResponse.redirect(redirectUrl, 301)
-      : NextResponse.next();
   }
 
-  // Domain-based locale resolution
-  const locale =
-    hostname && DOMAIN_LOCALE_MAP[hostname as keyof typeof DOMAIN_LOCALE_MAP];
-  const headers = new Headers(req.headers);
-  headers.set(headerName, locale ?? "");
-  const response = NextResponse.next({ headers });
-  response.cookies.set(cookieName, locale ?? "", {
-    path: "/",
-    httpOnly: false,
-  });
+  // Legacy: All old Prefix-based routing (/en, /vi) redirect to new Domain-based routing (.com, .vn)
+  if (!isDev) {
+    const segments = pathname.split("/").filter(Boolean);
+    const pathLocale = segments[0];
+    if (pathLocale && pathLocale in PATH_LOCALE_MAP) {
+      const newDomain = PATH_LOCALE_MAP[pathLocale];
+      const newPath = "/" + segments.slice(1).join("/");
+
+      const redirectUrl = new URL(`${newPath || "/"}${search}`, newDomain);
+
+      return NextResponse.redirect(redirectUrl, 301);
+    }
+  }
+
+  // Bring control back to next-intl
+  const handleI18nRouting = createMiddleware(routing);
+  const response = handleI18nRouting(request);
   return response;
 }

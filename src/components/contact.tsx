@@ -6,14 +6,13 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { ProjectCard } from "./project-card";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { getT } from "@/i18n";
-
+import { getTranslations } from "next-intl/server";
 interface ContactProps {
   delay?: number;
 }
 
 export async function Contact({ delay = 0 }: ContactProps) {
-  const { t } = await getT();
+  const t = await getTranslations();
   return (
     <section id="contact">
       <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">

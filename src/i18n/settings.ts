@@ -1,6 +1,5 @@
 export const fallbackLng = "en";
-export const languages = [fallbackLng, "vi"];
-export const defaultNS = "translation";
+export const languages = [fallbackLng, "vi"] as const;
 export const cookieName = "portfolio-current-language";
 export const headerName = "x-portfolio-current-language";
 

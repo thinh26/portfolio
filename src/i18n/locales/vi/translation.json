@@ -48,14 +48,13 @@
     }
   ],
   "websiteData": {
-    "title": "Đức Thịnh | Software Developer",
-    "description": "$t(personalData.description)"
+    "title": "Đức Thịnh | Software Developer"
   },
-  "title": "Hi, $t(personalData.name.short) đây",
-  "description": "$t(personalData.description)",
+  "title": "Hi, {shortName} đây",
+  "description": "{descriptionText}",
   "location": "Nha Trang, Khánh Hoà, Việt Nam",
   "about": "Giới thiệu",
-  "summary": "$t(personalData.summary)",
+  "summary": "{summary}",
   "workExperience": "Kinh nghiệm làm việc",
   "education": "Học vấn",
   "mySkills": "Chuyên môn",

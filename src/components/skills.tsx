@@ -6,7 +6,7 @@ import { skillsData } from "@/data/data";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useT } from "@/i18n/client";
+import { useTranslations } from "next-intl";
 
 interface SkillsProps {
   delay?: number;
@@ -16,7 +16,7 @@ export function Skills({ delay = 0 }: SkillsProps) {
   const [selectedSkillCategory, setSelectedSkillCategory] = useState<string>(
     skillsData[0]?.category || "",
   );
-  const { t } = useT();
+  const t = useTranslations();
 
   return (
     <section id="skills">
