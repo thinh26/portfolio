@@ -8,10 +8,10 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import ServiceWorker from "@/components/ServiceWorker";
 import { DOMAIN_LOCALE_MAP, languages, PATH_LOCALE_MAP } from "@/i18n/settings";
-import { getT } from "@/i18n";
+import { NextIntlClientProvider } from "next-intl";
 import { personalData } from "@/data/data";
 import { cookies, headers } from "next/headers";
-import I18nClientWrapper from "@/components/i18n/I18nClientWrapper";
+import { getTranslations } from "next-intl/server";
 
 const fontSans = Bai_Jamjuree({
   subsets: ["latin"],
@@ -20,7 +20,7 @@ const fontSans = Bai_Jamjuree({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getT();
+  const t = await getTranslations();
   const hostname = headers().get("host")?.split(":").at(0);
 
   return {
@@ -129,7 +129,7 @@ export default async function RootLayout({
         )}
       >
         {/* <ServiceWorker> */}
-        <I18nClientWrapper language={language}>
+        <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="light">
             <TooltipProvider delayDuration={0}>
               {children}
@@ -137,7 +137,7 @@ export default async function RootLayout({
               <Navbar />
             </TooltipProvider>
           </ThemeProvider>
-        </I18nClientWrapper>
+        </NextIntlClientProvider>
         {/* </ServiceWorker> */}
       </body>
     </html>

@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import acceptLanguage from "accept-language";
-import {
-  fallbackLng,
-  languages,
-  cookieName,
-  headerName,
-} from "@/i18n/settings";
-
-acceptLanguage.languages(languages);
+import { PATH_LOCALE_MAP } from "./i18n/settings";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 export const config = {
   matcher: [
@@ -15,93 +9,32 @@ export const config = {
   ],
 };
 
-export function middleware(req: NextRequest) {
-  const { pathname, search, origin, hostname } = req.nextUrl;
+export function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+  const hostname = request.headers.get("host")?.split(":")[0];
+
   const isDev = process.env.NODE_ENV !== "production";
 
   if (pathname.includes("icon") || pathname.includes("chrome")) {
     return NextResponse.next();
   }
 
-  const lngInPath = languages.find((l) => pathname.startsWith(`/${l}`));
+  // Legacy: All old Prefix-based routing (/en, /vi) redirect to new Domain-based routing (.com, .vn)
+  if (!isDev) {
+    const segments = pathname.split("/").filter(Boolean);
+    const pathLocale = segments[0];
+    if (pathLocale && pathLocale in PATH_LOCALE_MAP) {
+      const newDomain = PATH_LOCALE_MAP[pathLocale];
+      const newPath = "/" + segments.slice(1).join("/");
 
-  /* =====================================================
-   * DEV ENV — đơn giản: chỉ cần lang trong path
-   * ===================================================== */
-  if (isDev) {
-    const finalLang = lngInPath ?? fallbackLng;
+      const redirectUrl = new URL(`${newPath || "/"}${search}`, newDomain);
 
-    if (!lngInPath) {
-      return NextResponse.rewrite(
-        new URL(`/${finalLang}${pathname}${search}`, req.url),
-      );
-    }
-
-    const headers = new Headers(req.headers);
-    headers.set(headerName, finalLang);
-
-    const res = NextResponse.next({ headers });
-    res.cookies.set(cookieName, finalLang);
-    return res;
-  }
-
-  /* =====================================================
-   * PROD ENV — DOMAIN FIRST
-   * ===================================================== */
-
-  const isVN = hostname.endsWith(".vn");
-  const isCOM = hostname.endsWith(".com");
-
-  /* ---------- 1. REDIRECT (canonical domain) ---------- */
-
-  // .vn chỉ cho vi
-  if (isVN && lngInPath && lngInPath !== "vi") {
-    return NextResponse.redirect(
-      new URL(`${pathname.replace(`/${lngInPath}`, "")}${search}`, origin),
-      301,
-    );
-  }
-
-  // .com không cho /vi
-  if (isCOM && pathname.startsWith("/vi")) {
-    return NextResponse.redirect(
-      new URL(`${pathname.replace("/vi", "")}${search}`, origin),
-      301,
-    );
-  }
-
-  /* ---------- 2. REWRITE (internal routing) ---------- */
-
-  let rewriteUrl: URL | null = null;
-  let finalLang: string;
-
-  if (isVN) {
-    finalLang = "vi";
-    if (!pathname.startsWith("/vi")) {
-      rewriteUrl = new URL(`/vi${pathname}${search}`, req.url);
-    }
-  } else {
-    // .com
-    finalLang =
-      lngInPath ??
-      acceptLanguage.get(req.cookies.get(cookieName)?.value) ??
-      acceptLanguage.get(req.headers.get("Accept-Language")) ??
-      fallbackLng;
-
-    if (!lngInPath) {
-      rewriteUrl = new URL(`/${finalLang}${pathname}${search}`, req.url);
+      return NextResponse.redirect(redirectUrl, 301);
     }
   }
 
-  /* ---------- 3. SET HEADER + COOKIE (LAST STEP) ---------- */
-
-  const headers = new Headers(req.headers);
-  headers.set(headerName, finalLang);
-
-  const res = rewriteUrl
-    ? NextResponse.rewrite(rewriteUrl, { headers })
-    : NextResponse.next({ headers });
-
-  res.cookies.set(cookieName, finalLang);
-  return res;
+  // Bring control back to next-intl
+  const handleI18nRouting = createMiddleware(routing);
+  const response = handleI18nRouting(request);
+  return response;
 }
