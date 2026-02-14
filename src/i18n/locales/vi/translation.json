@@ -48,8 +48,7 @@
     }
   ],
   "websiteData": {
-    "title": "Đức Thịnh | Software Developer",
-    "description": "$t(personalData.description)"
+    "title": "Đức Thịnh | Software Developer"
   },
   "title": "Hi, {shortName} đây",
   "description": "{descriptionText}",

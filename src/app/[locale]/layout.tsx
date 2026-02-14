@@ -12,6 +12,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { personalData } from "@/data/data";
 import { cookies, headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
 const fontSans = Bai_Jamjuree({
   subsets: ["latin"],
@@ -36,7 +37,9 @@ export async function generateMetadata(): Promise<Metadata> {
       default: t("websiteData.title"),
       template: `$s | ${t("websiteData.title")}`,
     },
-    description: t("description"),
+    description: t("description", {
+      descriptionText: t("personalData.description"),
+    }),
     creator: t("personalData.name.full"),
     authors: [
       {
@@ -64,7 +67,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: t("websiteData.title"),
-      description: t("description"),
+      description: t("description", {
+        descriptionText: t("personalData.description"),
+      }),
       url: `https://${hostname}`,
       siteName: t("websiteData.title"),
       locale: DOMAIN_LOCALE_MAP[hostname ?? ""] === "en" ? "en_US" : "vi_VN",
@@ -86,7 +91,9 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: t("websiteData.title"),
-      description: t("description"),
+      description: t("description", {
+        descriptionText: t("personalData.description"),
+      }),
       creator: `@${personalData.username}`,
       creatorId: "3221138588",
       site: `@${personalData.username}`,

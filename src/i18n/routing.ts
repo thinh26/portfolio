@@ -47,7 +47,7 @@ export const routing =
         localeCookie: {
           name: cookieName,
         },
-        alternateLinks: false,
+        alternateLinks: true,
         // Used when no locale matches
         defaultLocale: fallbackLng,
       });
