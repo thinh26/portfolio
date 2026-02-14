@@ -8,12 +8,12 @@ export const routing =
         locales: languages,
         domains: [
           {
-            domain: "thinh26.com",
+            domain: "www.thinh26.com",
             defaultLocale: "en",
             locales: ["en"],
           },
           {
-            domain: "thinh26.vn",
+            domain: "www.thinh26.vn",
             defaultLocale: "vi",
             locales: ["vi"],
           },
