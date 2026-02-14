@@ -18,12 +18,12 @@ export const routing =
             locales: ["vi"],
           },
           {
-            domain: "beta-portfolio.thinh26.com",
+            domain: "beta.portfolio.thinh26.com",
             defaultLocale: "en",
             locales: ["en"],
           },
           {
-            domain: "beta-portfolio.thinh26.vn",
+            domain: "beta.portfolio.thinh26.vn",
             defaultLocale: "vi",
             locales: ["vi"],
           },
